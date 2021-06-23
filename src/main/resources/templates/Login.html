@@ -1,0 +1,194 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>登录</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+    <!-- jquery -->
+    <script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
+    <!-- bootstrap -->
+    <link rel="stylesheet" type="text/css" th:href="@{/bootstrap/css/bootstrap.min.css}" />
+    <script type="text/javascript" th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+    <!-- jquery-validator -->
+    <script type="text/javascript" th:src="@{/jquery-validation/jquery.validate.min.js}"></script>
+    <script type="text/javascript" th:src="@{/jquery-validation/localization/messages_zh.min.js}"></script>
+    <!-- layer -->
+    <script type="text/javascript" th:src="@{/layer/layer.js}"></script>
+    <!-- md5.js -->
+    <script type="text/javascript" th:src="@{/js/md5.min.js}"></script>
+    <!-- common.js -->
+    <script type="text/javascript" th:src="@{/js/common.js}"></script>
+
+	<style type="text/css">
+		html, body {
+			height: 100%;
+			width: 100%;
+		}
+
+		body {
+			background: url('/img/bg.jpg') no-repeat;
+			background-size: 100% 100%;
+			padding-top: 100px;
+		}
+
+		.login-box {
+			margin: 100px auto;
+			border: 1px solid #ecf7ff;
+			padding: 50px;
+			padding-bottom: 10px;
+			width: 600px;
+			box-sizing: border-box;
+			text-align: center;
+			border-radius: 4px;
+			background-color: #fff;
+			opacity: 88%;
+		}
+
+		.logo {
+			width: 80px;
+			height: 80px;
+			margin: -30px 0 20px 0;
+		}
+
+		.mobile, .password{
+			width: 410px;
+			height: 40px;
+			font-size: 14px;
+			margin: 20px auto;
+			border-radius: 4px;
+			border: 1px solid #ddd;;
+			color: #aaa;
+			padding: 10px;
+		}
+
+		.title {
+			width: 410px;
+			font-size: 30px;
+			font-weight: 500;
+		}
+
+		hr {
+			display: inline-block;
+			width: 100px;
+			margin: 10px 10px;
+			border: 1px solid #ddd;
+		}
+
+		.btn-box {
+			width: 414px;
+			height: 38px;
+			box-sizing: border-box;
+			margin: 20px auto;
+			position: relative;
+		}
+
+		.btn-box > a {
+			display: block;
+			text-decoration: none;
+			border: 1px solid #0381aa;
+			color: #fff;
+			width: 186px;
+			height: 38px;
+			background-color: #00a7de;
+			border-radius: 2px;
+			font-size: 14px;
+			line-height: 38px;
+		}
+
+		.btn-box-loginBtn {
+			position: absolute;
+			left: 0;
+		}
+
+		.btn-box-loginBtn:hover {
+			background-color: #00bee7;
+		}
+
+		.btn-box-registerBtn {
+			position: absolute;
+			right: 0;
+		}
+
+		.btn-box-registerBtn:hover {
+			background-color: #00bee7;
+		}
+
+		p {
+			text-align: center;
+			font-family: Chinese Quote,-apple-system,BlinkMacSystemFont,Segoe UI,PingFang SC,Hiragino Sans GB,Microsoft YaHei,Helvetica Neue,Helvetica,Arial,sans-serif;
+			width: 100%;
+			color: #000000;
+			font-size: .9rem;
+			line-height: 1rem;
+			height: 1rem;
+			font-weight: 600;
+		}
+
+	</style>
+
+</head>
+
+<body>
+<form name="loginForm" id="loginForm" style="width:30%; margin:0 auto;">
+	<div class="login-box">
+		<img src="https://cdn.jsdelivr.net/gh/Khighness/cdn/avatar/K.jpg" class="logo"/>
+		<div>
+			<hr class="title-line-left"/>
+			<span class="title">秒杀 | 登录</span>
+			<hr class="title-line-right"/>
+		</div>
+		<form name="loginForm" method="post">
+			<input type="text" id="mobile" name="mobile" class="mobile" placeholder="电话" required="true" minlength="11" maxlength="11"/><br/>
+			<input type="password" id="password" name="password" class="password" placeholder="密码" required="true" minlength="6" maxlength="16"><br/>
+			<div class="btn-box">
+				<div class="col-md-6">
+					<button class="btn btn-primary btn-block" type="submit" onclick="login()">登录</button>
+				</div>
+				<div class="col-md-6">
+					<button class="btn btn-primary btn-block" type="reset" onclick="reset()">重置</button>
+				</div>
+			</div>
+		</form>
+		<br />
+		<p>© Copyright 2021 KHighness</p>
+	</div>
+</form>
+</body>
+
+<script>
+function login(){
+	$("#loginForm").validate({
+        submitHandler:function(form){
+             doLogin();
+        }
+    });
+}
+function doLogin(){
+	g_showLoading();
+	var mobile = $("#mobile").val();
+	var inputPass = $("#password").val();
+	var prefix = password_salt_prefix;
+	var suffix = password_salt_suffix;
+	var target = prefix + inputPass + suffix;
+	var password = md5(target);
+	$.ajax({
+		url: "/user/authenticate",
+	    type: "POST",
+	    data:{
+	    	mobile: mobile,
+	    	password: password
+	    },
+	    success:function(data){
+	    	layer.closeAll();
+			layer.msg(data.msg);
+	    	if (data.code === 0){
+	    		window.location.href="/goods/list";
+	    	}
+	    },
+	    error:function(){
+	    	layer.closeAll();
+	    }
+	});
+}
+</script>
+</html>
