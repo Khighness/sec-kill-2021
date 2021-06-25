@@ -121,7 +121,7 @@ public class RedisService {
     }
 
     public static String getRealKey(KeyPrefix prefix, String key) {
-        if (ObjectUtils.isEmpty(prefix) || StringUtils.isBlank(key))
+        if (ObjectUtils.isEmpty(prefix) || key == null)
             throw new NullPointerException("Prefix and key cannot be null");
         return prefix.getPrefix() + key;
     }

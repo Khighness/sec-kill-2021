@@ -6,8 +6,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
+import top.parak.exception.GlobalException;
 import top.parak.redis.AuthKey;
 import top.parak.redis.RedisService;
+import top.parak.response.CodeMessage;
 import top.parak.util.CookieUtil;
 
 import javax.servlet.http.HttpServletRequest;
@@ -30,9 +32,9 @@ public class LoginInterceptor implements HandlerInterceptor {
         if (authenticated(request))
             return true;
         else {
-            log.info("拦截URL：{}", request.getRequestURL());
-            response.sendRedirect("/user/login");
-            return false;
+            log.info("拦截URL => {}", request.getRequestURL());
+            // response.sendRedirect("/user/login");
+            throw new GlobalException(CodeMessage.TOKEN_ERROR);
         }
     }
 

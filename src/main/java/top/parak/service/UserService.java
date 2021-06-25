@@ -1,5 +1,6 @@
 package top.parak.service;
 
+import org.apache.commons.lang3.StringUtils;
 import top.parak.domain.User;
 import top.parak.vo.LoginVO;
 
@@ -16,9 +17,12 @@ public interface UserService {
 
     public User getByToken(HttpServletResponse response, String token);
 
-    public User getById(Long id);
+    public User getById(long id);
 
     public User getByMobile(String mobile);
 
     public boolean saveUser(User user);
+
+    public boolean updatePassword(String token, String mobile, String newPass);
+
 }

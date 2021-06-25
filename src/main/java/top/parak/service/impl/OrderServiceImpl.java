@@ -50,14 +50,19 @@ public class OrderServiceImpl implements OrderService {
         orderInfo.setOrderChannel((short) 1);
         orderInfo.setStatus((short) 0);
         orderInfo.setCreateDate(new Date());
-        long orderId = orderDao.insertOrderAndGetId(orderInfo);
-        orderInfo.setId(orderId);
+        orderDao.insertOrderAndGetId(orderInfo);
+        Long orderInfoId = orderInfo.getId();
         SecKillOrder secKillOrder = new SecKillOrder();
         secKillOrder.setUserId(user.getId());
-        secKillOrder.setOrderId(orderId);
+        secKillOrder.setOrderId(orderInfoId);
         secKillOrder.setGoodsId(goods.getId());
         orderDao.insertSeckillOrder(secKillOrder);
         return orderInfo;
+    }
+
+    @Override
+    public OrderInfo getOrderById(long orderId) {
+        return orderDao.getOrderById(orderId);
     }
 
 }

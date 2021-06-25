@@ -11,6 +11,7 @@ import top.parak.domain.User;
 import top.parak.exception.GlobalException;
 import top.parak.redis.AuthKey;
 import top.parak.redis.RedisService;
+import top.parak.redis.UserKey;
 import top.parak.response.CodeMessage;
 import top.parak.service.UserService;
 import top.parak.util.CookieUtil;
@@ -69,8 +70,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getById(Long id) {
-        return userDao.getById(id);
+    public User getById(long id) {
+        User user = redisService.get(UserKey.getById, "" + id, User.class);
+        if (!ObjectUtils.isEmpty(user)) {
+            return user;
+        }
+        user = getById(id);
+        redisService.set(UserKey.getById, "" + id, user);
+        return user;
     }
 
     @Override
@@ -82,6 +89,22 @@ public class UserServiceImpl implements UserService {
     public boolean saveUser(User user) {
         int ans = userDao.saveUser(user);
         return ans > 0;
+    }
+
+    @Override
+    public boolean updatePassword(String token, String mobile, String newPass) {
+        // 更新数据库
+        User user = getByMobile(mobile);
+        if (ObjectUtils.isEmpty(user))
+            throw new GlobalException(CodeMessage.MOBILE_NOT_EXISTS);
+        user.setPassword(newPass);
+        String targetPass = MD5Util.inputPassToDBPass(newPass, user.getSalt());
+        userDao.updatePassword(mobile, targetPass);
+        // 更新缓存
+        redisService.delete(UserKey.getById, "" + user.getId());
+        redisService.delete(UserKey.getByMobile, "" + user.getMobile());
+        redisService.set(AuthKey.token, token, user);
+        return true;
     }
 
     /**

@@ -32,4 +32,7 @@ public interface UserDao {
     @Update("update user set last_login_date = #{lastLoginDate}, login_count = login_count + 1 where mobile = #{mobile}")
     public void updateLogin(@Param("mobile") String mobile, @Param("lastLoginDate") Date lastLoginDate);
 
+    @Update("update user set password = #{password} where mobile = #{mobile}")
+    public void updatePassword(@Param("mobile") String mobile, @Param("password") String password);
+
 }

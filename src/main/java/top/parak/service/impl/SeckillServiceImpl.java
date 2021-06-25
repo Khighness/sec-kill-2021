@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
 import top.parak.domain.OrderInfo;
 import top.parak.domain.User;
@@ -18,6 +19,7 @@ import top.parak.vo.GoodsVO;
  * @apiNote 秒杀服务实现
  */
 @Service
+@EnableTransactionManagement
 public class SeckillServiceImpl implements SeckillService {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 

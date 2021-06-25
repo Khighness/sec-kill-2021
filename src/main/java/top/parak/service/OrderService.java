@@ -17,4 +17,6 @@ public interface OrderService {
 
     public OrderInfo createOrder(User user, GoodsVO goods);
 
+    public OrderInfo getOrderById(long orderId);
+
 }

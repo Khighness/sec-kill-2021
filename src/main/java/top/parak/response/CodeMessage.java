@@ -16,7 +16,7 @@ public enum  CodeMessage {
     ACCESS_LIMIT_REACHED(500103, "访问过于频繁"),
 
     /** 登录模块 */
-    SESSION_ERROR(500210, "session不存在或者已失效"),
+    TOKEN_ERROR(500210, "Token不存在或者已失效，请重新登录"),
     PASSWORD_EMPTY(500211, "密码不能为空"),
     MOBILE_EMPTY(500212, "手机号不能为空"),
     MOBILE_ERROR(500213, "手机号码格式错误"),

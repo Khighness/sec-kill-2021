@@ -22,9 +22,10 @@ public class WebConfigure implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-//        registry.addInterceptor(loginInterceptor)
-//                .addPathPatterns("/goods/**/**")
-//                .addPathPatterns("/seckill/**/**");
+        registry.addInterceptor(loginInterceptor)
+                .addPathPatterns("/goods/detail")
+                .addPathPatterns("/seckill/buy")
+                .addPathPatterns("/order/detail");
     }
 
     @Override

@@ -6,7 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
+import top.parak.dao.OrderDao;
 import top.parak.dao.UserDao;
+import top.parak.domain.OrderInfo;
+import top.parak.domain.SecKillOrder;
 import top.parak.domain.User;
 import top.parak.redis.AuthKey;
 import top.parak.redis.RedisService;
@@ -28,6 +31,8 @@ public class BatchProcessUserData {
     private UserDao userDao;
     @Autowired
     private RedisService redisService;
+    @Autowired
+    private OrderDao orderDao;
 
     @Test
     public void insert() throws IOException {
@@ -62,5 +67,12 @@ public class BatchProcessUserData {
     public void select() {
         User user = userDao.getById(1L);
         System.out.println(user);
+    }
+
+    @Test
+    public void testGet() {
+        OrderInfo orderInfo = new OrderInfo();
+        orderDao.insertOrderAndGetId(orderInfo);
+        System.out.println(orderInfo.getId());
     }
 }
