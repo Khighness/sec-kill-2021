@@ -21,7 +21,6 @@ import java.util.Date;
  * @apiNote 订单服务实现
  */
 @Service
-@EnableTransactionManagement
 public class OrderServiceImpl implements OrderService {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 

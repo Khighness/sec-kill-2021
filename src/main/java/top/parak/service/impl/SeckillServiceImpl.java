@@ -28,7 +28,6 @@ import java.util.UUID;
  * @apiNote 秒杀服务实现
  */
 @Service
-@EnableTransactionManagement
 public class SeckillServiceImpl implements SeckillService {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
