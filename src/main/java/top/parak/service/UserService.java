@@ -3,6 +3,7 @@ package top.parak.service;
 import org.apache.commons.lang3.StringUtils;
 import top.parak.domain.User;
 import top.parak.vo.LoginVO;
+import top.parak.vo.UserVO;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -15,7 +16,7 @@ public interface UserService {
 
     public void authenticate(HttpServletResponse response, LoginVO loginVO);
 
-    public User getByToken(HttpServletResponse response, String token);
+    public UserVO getByToken(HttpServletResponse response, String token);
 
     public User getById(long id);
 

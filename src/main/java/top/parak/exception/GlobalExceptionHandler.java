@@ -1,6 +1,5 @@
 package top.parak.exception;
 
-import org.apache.ibatis.javassist.compiler.ast.BinExpr;
 import org.springframework.validation.BindException;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -8,7 +7,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import top.parak.response.CodeMessage;
 import top.parak.response.ServerResponse;
 
-import javax.servlet.ServletResponse;
 import java.util.List;
 
 /**
@@ -23,7 +21,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(value = Exception.class)
     public ServerResponse<String> handleException(Exception e) {
-        // e.printStackTrace();
+        e.printStackTrace();
         return ServerResponse.error(e.getClass().getSimpleName() + ":" + e.getMessage());
     }
 

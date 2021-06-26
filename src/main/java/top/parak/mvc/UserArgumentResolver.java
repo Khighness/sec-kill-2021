@@ -11,6 +11,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 import top.parak.domain.User;
 import top.parak.service.UserService;
 import top.parak.util.CookieUtil;
+import top.parak.vo.UserVO;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -30,7 +31,7 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
     @Override
     public boolean supportsParameter(MethodParameter methodParameter) {
         Class<?> clazz = methodParameter.getParameterType();
-        return clazz == User.class;
+        return clazz == UserVO.class;
     }
 
     @Override

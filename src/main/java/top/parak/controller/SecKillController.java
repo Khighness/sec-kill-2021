@@ -6,9 +6,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import top.parak.domain.OrderInfo;
+import top.parak.annotation.AccessLimit;
 import top.parak.domain.SecKillOrder;
 import top.parak.domain.User;
 import top.parak.rabbit.MQSender;
@@ -24,6 +23,11 @@ import top.parak.service.UserService;
 import top.parak.vo.GoodsVO;
 import top.parak.vo.UserVO;
 
+import javax.imageio.ImageIO;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -72,19 +76,61 @@ public class SecKillController implements InitializingBean {
     }
 
     /**
+     * 验证码图片
+     * @param response  响应
+     * @param userVO   当前用户
+     * @param goodId   商品ID
+     * @return
+     */
+    @GetMapping("/verify")
+    @ResponseBody
+    public ServerResponse<String> verify(HttpServletResponse response, UserVO userVO,
+                                         @RequestParam("goodsId") long goodId) {
+        BufferedImage image = seckillService.createVerifyCode(userVO.getId(), goodId);
+        try {
+            ServletOutputStream outputStream = response.getOutputStream();
+            ImageIO.write(image, "JPG", outputStream);
+            outputStream.flush();
+            outputStream.close();
+            return null;
+        } catch (IOException e) {
+            return new ServerResponse<>(CodeMessage.SEC_KILL_FAILED);
+        }
+    }
+
+    /**
+     * 获取秒杀地址
+     * @param userVO     当前用户
+     * @param goodsId    商品ID
+     * @param verifyCode 验证码
+     * @return 路径
+     */
+    @GetMapping("/path")
+    @ResponseBody
+    public ServerResponse<String> path(UserVO userVO, @RequestParam("goodsId") long goodsId,
+                                       @RequestParam(value = "verifyCode") int verifyCode) {
+        if (!seckillService.checkVerifyCode(userVO.getId(), goodsId, verifyCode))
+            return new ServerResponse<>(CodeMessage.SEC_KILL_VERIFY_CODE_WRONG);
+        String seckillPath = seckillService.createSeckillPath(userVO.getId(), goodsId);
+        return ServerResponse.success(seckillPath);
+    }
+
+    /**
      * 购买
-     * @param user     当前用户
+     * @param userVO   当前用户
      * @param goodsId  商品ID
      * @return 检验成功则返回等待状态
      */
-    @PostMapping("/buy")
+    @AccessLimit(seconds = 10, maxCount = 2)
+    @PostMapping("/{path}/buy")
     @ResponseBody
-    public ServerResponse buy(User user, @RequestParam("goodsId") long goodsId) {
+    public ServerResponse buy(UserVO userVO, @RequestParam("goodsId") long goodsId, @PathVariable("path") String path) {
+        // 验证路径
+        if (!seckillService.checkSeckillPath(userVO.getId(), goodsId, path))
+            return new ServerResponse<>(CodeMessage.SEC_KILL_REQUEST_PATH_WRONG);
         // 是否购完
-        Boolean over = localGoodsOverMap.get(goodsId);
-        if (over) {
+        if (localGoodsOverMap.get(goodsId))
             return new ServerResponse<>(CodeMessage.SEC_KILL_OVER);
-        }
         // 预减库存
         Long stock = redisService.decrement(GoodsKey.getSeckillGoodsStock, "" + goodsId);
         if (stock <= 0) {
@@ -92,13 +138,10 @@ public class SecKillController implements InitializingBean {
             return new ServerResponse<>(CodeMessage.SEC_KILL_FAILED);
         }
         // 检验重复
-        SecKillOrder order = orderService.getSeckillOrderByUserIdAndGoodsId(user.getId(), goodsId);
-        if (!ObjectUtils.isEmpty(order)) {
+        SecKillOrder order = orderService.getSeckillOrderByUserIdAndGoodsId(userVO.getId(), goodsId);
+        if (!ObjectUtils.isEmpty(order))
             return new ServerResponse<>(CodeMessage.REPEATE_CLICK);
-        }
         // 进入队列
-        UserVO userVO = new UserVO(user.getId(), user.getMobile(), user.getNickname(),
-                user.getAvatar(), user.getRegisterDate(), user.getLastLoginDate(), user.getLoginCount());
         SeckillMessage sm = new SeckillMessage(userVO, goodsId);
         mqSender.sendSeckillMessage(sm);
         return ServerResponse.success("Waiting");
@@ -106,17 +149,14 @@ public class SecKillController implements InitializingBean {
 
     /**
      * 秒杀结果
-     * <li>-1 => 秒杀失败
-     * <li>0  => 排队中
-     * <li>orderId => 秒杀成功
-     * @param user    当前用户
+     * @param userVO  当前用户
      * @param goodsId 商品ID
      * @return 秒杀状态
      */
     @GetMapping("/res")
     @ResponseBody
-    public ServerResponse<Long> res(User user, @RequestParam("goodsId") long goodsId) {
-        long res = seckillService.getSeckillResult(user.getId(), goodsId);
+    public ServerResponse<Long> res(UserVO userVO, @RequestParam("goodsId") long goodsId) {
+        long res = seckillService.getSeckillResult(userVO.getId(), goodsId);
         return ServerResponse.success(res);
     }
 

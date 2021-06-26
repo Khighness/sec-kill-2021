@@ -18,14 +18,19 @@ public class WebConfigure implements WebMvcConfigurer {
     @Autowired
     private LoginInterceptor loginInterceptor;
     @Autowired
+    private AccessInterceptor accessInterceptor;
+    @Autowired
     private UserArgumentResolver userArgumentResolver;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
+        // 认证
         registry.addInterceptor(loginInterceptor)
                 .addPathPatterns("/goods/detail")
-                .addPathPatterns("/seckill/buy")
+                .addPathPatterns("/seckill/**")
                 .addPathPatterns("/order/detail");
+        // 限流
+        registry.addInterceptor(accessInterceptor);
     }
 
     @Override

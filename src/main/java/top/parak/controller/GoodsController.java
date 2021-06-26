@@ -13,7 +13,7 @@ import org.thymeleaf.context.WebContext;
 import org.thymeleaf.spring5.ISpringTemplateEngine;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 
-import top.parak.domain.User;
+import top.parak.annotation.AccessLimit;
 import top.parak.redis.GoodsKey;
 import top.parak.redis.RedisService;
 import top.parak.response.ServerResponse;
@@ -71,17 +71,13 @@ public class GoodsController{
 
     /**
      * 商品详情
-     * @param request  请求
-     * @param response 响应
-     * @param model    UI
-     * @param user    当前用户信息
      * @param goodsId 商品ID
      * @return 商品详情信息
      */
+    @AccessLimit(seconds = 5, maxCount = 5)
     @RequestMapping(value = "/detail/{goodsId}")
     @ResponseBody
-    public ServerResponse<GoodsDetailVO> detail2(HttpServletRequest request, HttpServletResponse response, Model model, User user,
-                                                 @PathVariable("goodsId") long goodsId) {
+    public ServerResponse<GoodsDetailVO> detail(@PathVariable("goodsId") long goodsId) {
         GoodsVO goodsVO = goodsService.getGoodsVOById(goodsId);
         long startTime = goodsVO.getStartDate().getTime();
         long endTime = goodsVO.getEndDate().getTime();

@@ -26,6 +26,9 @@ public class UserVO implements Serializable {
 
     private Long loginCount;
 
+    public UserVO() {
+    }
+
     public UserVO(Long id, String mobile, String nickname, String avatar, Date registerDate, Date lastLoginDate, Long loginCount) {
         this.id = id;
         this.mobile = mobile;

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import top.parak.domain.User;
+
 import top.parak.response.ServerResponse;
 import top.parak.service.UserService;
 import top.parak.vo.LoginVO;
@@ -54,13 +54,12 @@ public class UserController {
 
     /**
      * 信息
-     * @param user 当前用户信息
+     * @param userVO 当前用户信息
      * @return 过滤敏感信息的用户信息
      */
     @ResponseBody
     @GetMapping("/info")
-    public ServerResponse<UserVO> info(User user) {
-        UserVO userVO = new UserVO(user.getId(), user.getMobile(), user.getNickname(), user.getAvatar(), user.getRegisterDate(), user.getLastLoginDate(), user.getLoginCount());
+    public ServerResponse<UserVO> info(UserVO userVO) {
         return ServerResponse.success(userVO);
     }
 

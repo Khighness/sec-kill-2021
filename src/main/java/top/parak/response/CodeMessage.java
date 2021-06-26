@@ -32,7 +32,9 @@ public enum  CodeMessage {
     /** 秒杀模块  */
     SEC_KILL_OVER(500500, "秒杀活动已结束"),
     REPEATE_CLICK(500501, "不能重复秒杀"),
-    SEC_KILL_FAILED(500502, "秒杀失败");
+    SEC_KILL_FAILED(500502, "秒杀失败"),
+    SEC_KILL_VERIFY_CODE_WRONG(500503, "验证码错误"),
+    SEC_KILL_REQUEST_PATH_WRONG(500503, "路径错误");
 
     private int code;
     private String msg;

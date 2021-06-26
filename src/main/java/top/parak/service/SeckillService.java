@@ -1,8 +1,9 @@
 package top.parak.service;
 
-import top.parak.domain.OrderInfo;
 import top.parak.vo.GoodsVO;
 import top.parak.vo.UserVO;
+
+import java.awt.image.BufferedImage;
 
 /**
  * @author KHighness
@@ -11,8 +12,20 @@ import top.parak.vo.UserVO;
  */
 public interface SeckillService {
 
-    public OrderInfo kill(UserVO user, GoodsVO goods);
+    public void kill(UserVO user, GoodsVO goods);
 
     public long getSeckillResult(long userId, long goodsId);
+
+    public void setGoodsOver(long goodsId);
+
+    public boolean getGoodsOver(long goodsId);
+
+    public BufferedImage createVerifyCode(long userId, long goodsId);
+
+    public boolean checkVerifyCode(long userId, long goodsId, int verifyCode);
+
+    public String createSeckillPath(long userId, long goodsId);
+
+    public boolean checkSeckillPath(long userId, long goodsId, String path);
 
 }

@@ -38,7 +38,4 @@ public class BeanUtil {
             return JSON.parseObject(str, clazz);
     }
 
-    public static void main(String[] args) {
-        System.out.println(beanToString("Khighness"));
-    }
 }

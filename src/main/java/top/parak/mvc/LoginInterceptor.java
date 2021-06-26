@@ -1,5 +1,6 @@
 package top.parak.mvc;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +12,7 @@ import top.parak.redis.AuthKey;
 import top.parak.redis.RedisService;
 import top.parak.response.CodeMessage;
 import top.parak.util.CookieUtil;
+import top.parak.vo.UserVO;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -28,7 +30,7 @@ public class LoginInterceptor implements HandlerInterceptor {
     private RedisService redisService;
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception { ;
         if (authenticated(request))
             return true;
         else {
@@ -46,6 +48,7 @@ public class LoginInterceptor implements HandlerInterceptor {
         String token = CookieUtil.getTokenFromParamOrCookies(request);
         if (StringUtils.isBlank(token))
             return false;
-        return redisService.exists(AuthKey.token, token);
+        UserVO userVO = redisService.get(AuthKey.token, token, UserVO.class);
+        return !ObjectUtils.isEmpty(userVO);
     }
 }

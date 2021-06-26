@@ -9,6 +9,7 @@ import org.springframework.util.ObjectUtils;
 import top.parak.dao.UserDao;
 import top.parak.domain.User;
 import top.parak.exception.GlobalException;
+import top.parak.mvc.UserContext;
 import top.parak.redis.AuthKey;
 import top.parak.redis.RedisService;
 import top.parak.redis.UserKey;
@@ -17,6 +18,7 @@ import top.parak.service.UserService;
 import top.parak.util.CookieUtil;
 import top.parak.util.MD5Util;
 import top.parak.vo.LoginVO;
+import top.parak.vo.UserVO;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
@@ -53,31 +55,27 @@ public class UserServiceImpl implements UserService {
             throw new GlobalException(CodeMessage.PASSWORD_WRONG);
         // 生成token
         String token = UUID.randomUUID().toString();
-        addCookieAndSaveRedis(response, token, user);
+        UserVO userVO = new UserVO(user.getId(), user.getMobile(), user.getNickname(),
+                user.getAvatar(), user.getRegisterDate(), user.getLastLoginDate(), user.getLoginCount());
+        addCookieAndSaveRedis(response, token, userVO);
         log.info("登录成功 => [电话: {}, 昵称: {}]", user.getMobile(), user.getNickname());
         // 更新登录
         userDao.updateLogin(mobile, new Date());
     }
 
     @Override
-    public User getByToken(HttpServletResponse response, String token) {
+    public UserVO getByToken(HttpServletResponse response, String token) {
         if (StringUtils.isBlank(token))
             return null;
-        User user = redisService.get(AuthKey.token, token, User.class);
-        if (!ObjectUtils.isEmpty(user))
-            addCookieAndSaveRedis(response, token, user);
-        return user;
+        UserVO userVO = redisService.get(AuthKey.token, token, UserVO.class);
+        if (!ObjectUtils.isEmpty(userVO))
+            addCookieAndSaveRedis(response, token, userVO);
+        return userVO;
     }
 
     @Override
     public User getById(long id) {
-        User user = redisService.get(UserKey.getById, "" + id, User.class);
-        if (!ObjectUtils.isEmpty(user)) {
-            return user;
-        }
-        user = getById(id);
-        redisService.set(UserKey.getById, "" + id, user);
-        return user;
+        return userDao.getById(id);
     }
 
     @Override
@@ -110,8 +108,8 @@ public class UserServiceImpl implements UserService {
     /**
      * 向客户端和缓存中添加token
      */
-    private void addCookieAndSaveRedis(HttpServletResponse response, String token, User user) {
-        redisService.set(AuthKey.token, token, user);
+    private void addCookieAndSaveRedis(HttpServletResponse response, String token, UserVO userVO) {
+        redisService.set(AuthKey.token, token, userVO);
         CookieUtil.addTokenToCookies(response, token);
     }
 
