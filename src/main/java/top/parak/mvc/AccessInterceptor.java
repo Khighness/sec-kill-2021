@@ -62,6 +62,7 @@ public class AccessInterceptor implements AsyncHandlerInterceptor, InitializingB
                 } else if (count < maxCount) {
                     redisService.increment(accessKey, key);
                 } else {
+                    response.setContentType("application/json;charset=UTF-8");
                     ServletOutputStream outputStream = response.getOutputStream();
                     outputStream.write(ACCESS_LIMIT_REACHED_JSON.getBytes(StandardCharsets.UTF_8));
                     outputStream.flush();

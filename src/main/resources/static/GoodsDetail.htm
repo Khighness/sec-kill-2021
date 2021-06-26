@@ -196,7 +196,7 @@
                 if (data.code === 0 && data.data !== null){
                     render(data.data);
                 } else {
-                    layer.msg("访问频繁");
+                    layer.msg(data.msg);
                 }
             },
             error:function(){
