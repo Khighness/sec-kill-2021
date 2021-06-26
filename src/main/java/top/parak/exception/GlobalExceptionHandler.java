@@ -23,7 +23,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(value = Exception.class)
     public ServerResponse<String> handleException(Exception e) {
-        e.printStackTrace();
+        // e.printStackTrace();
         return ServerResponse.error(e.getClass().getSimpleName() + ":" + e.getMessage());
     }
 

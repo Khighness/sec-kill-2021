@@ -23,6 +23,7 @@ import top.parak.vo.GoodsVO;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.util.List;
 
 /**
@@ -32,7 +33,7 @@ import java.util.List;
  */
 @Controller
 @RequestMapping("/goods")
-public class GoodsController {
+public class GoodsController{
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
@@ -64,52 +65,6 @@ public class GoodsController {
         html = templateEngine.process("GoodsList", webContext);
         if (StringUtils.isNotBlank(html)) {
             redisService.set(GoodsKey.getList, "", html);
-        }
-        return html;
-    }
-
-    /**
-     * 商品详情
-     * <p>页面缓存
-     * @param request  请求
-     * @param response 响应
-     * @param model    UI
-     * @param user    当前用户信息
-     * @param goodsId 商品ID
-     * @return 商品详情页面
-     */
-    // @RequestMapping(value = "/detail/{goodsId}", produces = "text/html")
-    @ResponseBody
-    public String detail(HttpServletRequest request, HttpServletResponse response, Model model, User user,
-                         @PathVariable("goodsId") long goodsId) {
-        String html = redisService.get(GoodsKey.getDetailById, String.valueOf(goodsId), String.class);
-        if (StringUtils.isNotBlank(html)) {
-            return html;
-        }
-        GoodsVO goodsVO = goodsService.getGoodsVOById(goodsId);
-        long startTime = goodsVO.getStartDate().getTime();
-        long endTime = goodsVO.getEndDate().getTime();
-        long now = System.currentTimeMillis();
-        // 秒杀活动状态，秒杀活动倒计时
-        int seckillStatus = 0, remainSeconds = 0;
-        if (now < startTime) { // 秒杀还未开始
-            remainSeconds = (int) (startTime - now) / 1000;
-        } else if (now > endTime) { // 秒杀已经结束
-            seckillStatus = 2;
-            remainSeconds = -1;
-        } else { // 秒杀正在进行
-            seckillStatus = 1;
-        }
-        model.addAttribute("user", user);
-        model.addAttribute("goods", goodsVO);
-        model.addAttribute("seckillStatus", seckillStatus);
-        model.addAttribute("remainSeconds", remainSeconds);
-        // log.info("商品ID => {}, 商品名称 => {}, 秒杀状态 => {}，倒计时 => {}", goodsId, goodsVO.getGoodsName(), seckillStatus, remainSeconds);
-        ISpringTemplateEngine templateEngine = thymeleafViewResolver.getTemplateEngine();
-        WebContext webContext = new WebContext(request, response, request.getServletContext(), request.getLocale(), model.asMap());
-        html = templateEngine.process("GoodsDetail", webContext);
-        if (StringUtils.isNotBlank(html)) {
-            redisService.set(GoodsKey.getDetailById, String.valueOf(goodsId), html);
         }
         return html;
     }

@@ -8,15 +8,5 @@ import top.parak.service.GoodsService;
 
 @SpringBootTest
 class SecKillApplicationTest {
-    @Autowired
-    private RedisService redisService;
-
-    @Autowired
-    private GoodsService goodsService;
-
-    @Test
-    public void query() {
-        goodsService.getGoodsVOList().forEach(System.out::println);
-    }
 
 }

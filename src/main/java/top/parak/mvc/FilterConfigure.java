@@ -37,7 +37,7 @@ public class FilterConfigure {
         registration.setFilter(para1Filter());
         registration.setEnabled(true);
         registration.setOrder(1);
-        registration.addUrlPatterns("/index");
+        registration.addUrlPatterns("/index/*/*");
         return registration;
     }
 
@@ -50,7 +50,7 @@ public class FilterConfigure {
         registration.setFilter(para2Filter());
         registration.setEnabled(true);
         registration.setOrder(2);
-        registration.addUrlPatterns("/index");
+        registration.addUrlPatterns("/index/*/*");
         return registration;
     }
 }

@@ -1,10 +1,9 @@
 package top.parak.service;
 
-import org.apache.ibatis.annotations.Param;
 import top.parak.domain.OrderInfo;
 import top.parak.domain.SecKillOrder;
-import top.parak.domain.User;
 import top.parak.vo.GoodsVO;
+import top.parak.vo.UserVO;
 
 /**
  * @author KHighness
@@ -15,7 +14,7 @@ public interface OrderService {
 
     public SecKillOrder getSeckillOrderByUserIdAndGoodsId(long userId, long goodsId);
 
-    public OrderInfo createOrder(User user, GoodsVO goods);
+    public OrderInfo createOrder(UserVO user, GoodsVO goods);
 
     public OrderInfo getOrderById(long orderId);
 

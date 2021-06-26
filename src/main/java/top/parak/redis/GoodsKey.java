@@ -16,4 +16,6 @@ public class GoodsKey extends BasePrefix {
 
     public static GoodsKey getDetailById = new GoodsKey(CACHE_TIME, "id");
 
+    public static GoodsKey getSeckillGoodsStock = new GoodsKey(-1, "seckillGoodsStock");
+
 }

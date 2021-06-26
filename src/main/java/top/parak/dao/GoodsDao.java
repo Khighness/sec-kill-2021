@@ -28,6 +28,6 @@ public interface GoodsDao {
 
     @Update("update seckill_goods set stock_count = stock_count - ${reduceCount} " +
             "where goods_id = #{goodsId} and stock_count > 0")
-    public void reduceStockCountById(@Param("goodsId") long goodsId, @Param("reduceCount") int reduceCount);
+    public int reduceStockCountById(@Param("goodsId") long goodsId, @Param("reduceCount") int reduceCount);
 
 }

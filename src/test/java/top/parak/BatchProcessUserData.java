@@ -5,15 +5,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.transaction.annotation.Transactional;
 import top.parak.dao.OrderDao;
 import top.parak.dao.UserDao;
 import top.parak.domain.OrderInfo;
-import top.parak.domain.SecKillOrder;
 import top.parak.domain.User;
 import top.parak.redis.AuthKey;
 import top.parak.redis.RedisService;
-import top.parak.util.CookieUtil;
 import top.parak.util.MD5Util;
 import top.parak.util.RandomInfoGenerator;
 
@@ -34,6 +31,7 @@ public class BatchProcessUserData {
     @Autowired
     private OrderDao orderDao;
 
+    // 批量生产用户数据，插入到数据库，并生成Token写入文件
     @Test
     public void insert() throws IOException {
         File file = new File("C:/Users/18236/Desktop/Config.txt");
@@ -61,18 +59,5 @@ public class BatchProcessUserData {
             outputStream.write(line.getBytes());
         }
         outputStream.close();
-    }
-
-    @Test
-    public void select() {
-        User user = userDao.getById(1L);
-        System.out.println(user);
-    }
-
-    @Test
-    public void testGet() {
-        OrderInfo orderInfo = new OrderInfo();
-        orderDao.insertOrderAndGetId(orderInfo);
-        System.out.println(orderInfo.getId());
     }
 }

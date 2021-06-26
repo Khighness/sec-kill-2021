@@ -15,6 +15,6 @@ public interface GoodsService {
 
     public GoodsVO getGoodsVOById(long goodsId);
 
-    public void reduceStockCountById(long goodsId, int reduceCount);
+    public boolean reduceStockCountById(long goodsId, int reduceCount);
 
 }

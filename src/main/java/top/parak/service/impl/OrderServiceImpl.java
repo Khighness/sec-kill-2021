@@ -9,9 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 import top.parak.dao.OrderDao;
 import top.parak.domain.OrderInfo;
 import top.parak.domain.SecKillOrder;
-import top.parak.domain.User;
 import top.parak.service.OrderService;
 import top.parak.vo.GoodsVO;
+import top.parak.vo.UserVO;
 
 import java.util.Date;
 
@@ -39,7 +39,7 @@ public class OrderServiceImpl implements OrderService {
      */
     @Transactional
     @Override
-    public OrderInfo createOrder(User user, GoodsVO goods) {
+    public OrderInfo createOrder(UserVO user, GoodsVO goods) {
         OrderInfo orderInfo = new OrderInfo();
         orderInfo.setUserId(user.getId());
         orderInfo.setGoodsId(goods.getId());

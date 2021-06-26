@@ -1,8 +1,8 @@
 package top.parak.service;
 
 import top.parak.domain.OrderInfo;
-import top.parak.domain.User;
 import top.parak.vo.GoodsVO;
+import top.parak.vo.UserVO;
 
 /**
  * @author KHighness
@@ -11,6 +11,8 @@ import top.parak.vo.GoodsVO;
  */
 public interface SeckillService {
 
-    public OrderInfo kill(User user, GoodsVO goods);
+    public OrderInfo kill(UserVO user, GoodsVO goods);
+
+    public long getSeckillResult(long userId, long goodsId);
 
 }

@@ -32,7 +32,7 @@ public class OrderController {
 
     @RequestMapping(value = "/detail")
     @ResponseBody
-    public ServerResponse<OrderDetailVO> detail(Model model, User user, @RequestParam("orderId") long orderId) {
+    public ServerResponse<OrderDetailVO> detail(@RequestParam("orderId") long orderId) {
         OrderInfo orderInfo = orderService.getOrderById(orderId);
         if (ObjectUtils.isEmpty(orderInfo)) {
             return new ServerResponse<>(CodeMessage.ORDER_NOT_EXISTS);

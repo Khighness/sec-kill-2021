@@ -33,7 +33,8 @@ public class GoodsServiceImpl implements GoodsService {
     }
 
     @Override
-    public void reduceStockCountById(long goodsId, int reduceCount) {
-        goodsDao.reduceStockCountById(goodsId, reduceCount);
+    public boolean reduceStockCountById(long goodsId, int reduceCount) {
+        int res = goodsDao.reduceStockCountById(goodsId, reduceCount);
+        return res == 1;
     }
 }
