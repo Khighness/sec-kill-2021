@@ -11,7 +11,7 @@
  Target Server Version : 80020
  File Encoding         : 65001
 
- Date: 26/06/2021 21:26:14
+ Date: 12/12/2021 00:35:42
 */
 
 SET NAMES utf8mb4;
@@ -36,7 +36,7 @@ CREATE TABLE `goods`  (
 -- Records of goods
 -- ----------------------------
 INSERT INTO `goods` VALUES (1, 'iPhone X', '全新刘海，面部解锁', '/img/iphone-x.jpg', 'A11仿生芯片，256G，颜色银色/深空灰色', 7999.00, 10000);
-INSERT INTO `goods` VALUES (2, 'VIVO X21', 'AI智慧拍照，照亮你的美', '/img/vivo-x21.jpg', 'MT6771处理器，6G+128G，颜色迷夜紫/宝石红\'极夜黑/极光白', 3499.00, 10000);
+INSERT INTO `goods` VALUES (2, 'VIVO X21', 'AI智慧拍照，照亮你的美', '/img/vivo-x21.jpg', 'MT6771处理器，6G+128G，颜色迷夜紫/宝石红/极夜黑/极光白', 3499.00, 10000);
 INSERT INTO `goods` VALUES (3, 'OPPO R15', '智美双全，焕然一新', '/img/oppo-r15.jpg', '梦境版，骁龙660处理器，6G+128G，颜色梦境紫/陶瓷黑/梦境红', 3499.00, 10000);
 INSERT INTO `goods` VALUES (4, '小米 6', '流光溢彩，温润如玉', '/img/mi-6.jpg', '骁龙835处理器，6G+128G，颜色亮黑/亮蓝/亮白/陶瓷黑', 2999.00, 10000);
 
@@ -57,7 +57,7 @@ CREATE TABLE `order_info`  (
   `create_date` datetime(0) NULL DEFAULT NULL COMMENT '下单日期',
   `pay_date` datetime(0) NULL DEFAULT NULL COMMENT '支付日期',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 30362 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 54105 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of order_info
@@ -96,7 +96,7 @@ CREATE TABLE `seckill_order`  (
   `goods_id` bigint NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `u_userid_goodsid`(`user_id`, `goods_id`) USING BTREE COMMENT '防止一个用户同时秒杀两次'
-) ENGINE = InnoDB AUTO_INCREMENT = 30352 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 54095 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of seckill_order
@@ -117,7 +117,7 @@ CREATE TABLE `user`  (
   `last_login_date` datetime(0) NULL DEFAULT NULL COMMENT '最后一次登录时间',
   `login_count` bigint NULL DEFAULT 0 COMMENT '登录次数',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1410085408 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 5010 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of user
